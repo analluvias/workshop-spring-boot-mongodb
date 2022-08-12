@@ -25,7 +25,7 @@ public class PostService {
 	
 	//essa eh a função que vai chamar o query method que implementamos na interface repository
 	public List<Post> findByTitle(String text){
-		return repo.findByTitleContainingIgnoringCase(text);
+		return repo.searchTitle(text);
 	}
 	
 	
