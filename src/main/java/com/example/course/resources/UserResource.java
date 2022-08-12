@@ -1,14 +1,17 @@
 package com.example.course.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.course.domain.User;
 import com.example.course.dto.UserDTO;
@@ -54,6 +57,27 @@ public class UserResource {
 
 		//retornando um UserDTO que é instanciado a partir do user que buscamos por id no bd
 		return ResponseEntity.ok().body(new UserDTO(user)); //mandamos mensagem de ok e o json de users
+	}
+	
+	@RequestMapping(method=RequestMethod.POST) //informando que ela implementa a requisição POST
+	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto){//Retorna responseEntity sem corpo
+																	//@RequestBody: informa que o parametro virá do body no postman
+		
+		/*ResponseEntity deve representar a resposta HTTP inteira. Você pode controlar
+		 *  tudo o que for necessário: código de status, cabeçalhos e corpo.
+		 *   @ResponseBody é um marcador para o corpo da resposta HTTP e @ResponseStatus
+		 *    declara o código de status da resposta HTTP.*/
+		
+		//chamo o meu service, que vai transformar o DTO em USER
+		User obj = service.fromDTO(objDto);
+		
+		//inserindo obj no db e pegando a resposta
+		obj = service.insert(obj);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+
+		//retornando mensagem de criado com o caminho criado(201) 
+		return ResponseEntity.created(uri).build(); //mandamos mensagem de ok e o json de users
 	}
 
 }
