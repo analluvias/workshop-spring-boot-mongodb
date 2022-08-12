@@ -1,11 +1,13 @@
 package com.example.course.resources;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,5 +58,26 @@ public class PostResource {
 		//retornando o único post que buscamos por id no bd
 		return ResponseEntity.ok().body(list); //mandamos mensagem de ok e o json com o post
 	}
+	
+	@RequestMapping(value = "/fullsearch", method=RequestMethod.GET)
+	public ResponseEntity<List<Post>> fullSearch(
+			@RequestParam(value = "text", defaultValue="") String text,
+			@RequestParam(value = "minDate", defaultValue="") String minDate,
+			@RequestParam(value = "maxDate", defaultValue="") String maxDate){
+		
+		//fazendo a decodificaçao do texto que recebemos como parametro
+		text = URL.decodeParam(text);
+		
+		//convertendo de string para data na nossa classe util URL
+		// new Date(0L) siginifica a data mínima aceita pelo java, é uma constante tipo: 1/1/1979
+		Date min = URL.convertDate(minDate, new Date(0L));
+		Date max = URL.convertDate(maxDate, new Date());
+		
+		List<Post> list = service.fullSearch(text, min, max);
+		
+		return ResponseEntity.ok().body(list);
+		
+	}
+	
 	
 }

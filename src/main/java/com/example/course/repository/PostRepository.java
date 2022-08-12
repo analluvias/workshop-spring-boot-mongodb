@@ -1,5 +1,6 @@
 package com.example.course.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -21,5 +22,11 @@ public interface PostRepository extends MongoRepository<Post, String>{ //<Classe
 	//$options: nesse caso, informo que quero ignorar maiusculas e minusculas
 	@Query("{ 'title':  { $regex: ?0, $options: 'i' } }")
 	List<Post> searchTitle(String text);
+	
+	//buscar ou no titulo ou no texto ou nos comments
+	//e a datamin é x e a data max é y
+	@Query("{ $and: [{ date: {$gte: ?1} }, { date: {$lte: ?2} }, { $or: [ { 'title':  { $regex: ?0, $options: 'i' } },"
+			+ " { 'body':  { $regex: ?0, $options: 'i' } }, { 'comments.text':  { $regex: ?0, $options: 'i' } } ] } ] }")
+	List<Post> fullSearch(String text, Date minDtae, Date maxDate);
 	
 }

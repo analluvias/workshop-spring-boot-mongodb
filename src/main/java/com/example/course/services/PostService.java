@@ -1,5 +1,6 @@
 package com.example.course.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,15 @@ public class PostService {
 	//essa eh a função que vai chamar o query method que implementamos na interface repository
 	public List<Post> findByTitle(String text){
 		return repo.searchTitle(text);
+	}
+	
+	public List<Post> fullSearch(String text, Date minDate, Date maxDate){
+		
+		//aumentando a data máxima em 24h
+		maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000);
+		
+		return repo.fullSearch(text, minDate, maxDate);
+		
 	}
 	
 	
