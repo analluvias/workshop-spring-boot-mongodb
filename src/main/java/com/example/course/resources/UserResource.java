@@ -1,10 +1,11 @@
 package com.example.course.resources;
 
-import java.util.List;import java.util.stream.Collector;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ public class UserResource {
 	private UserService service;
 	
 	@RequestMapping(method=RequestMethod.GET) //informando que ela implementa a requisição GET
-	public ResponseEntity<List<UserDTO>> findAll(){//Retorna um UserDTO (só retorna o que tiver get dentro do DTO)
+	public ResponseEntity<List<UserDTO>> findAll(){//Retorna uma lista UserDTO (padrão que só retorna o que tiver get dentro do DTO)
 		
 		/*ResponseEntity deve representar a resposta HTTP inteira. Você pode controlar
 		 *  tudo o que for necessário: código de status, cabeçalhos e corpo.
@@ -37,6 +38,22 @@ public class UserResource {
 		List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 		
 		return ResponseEntity.ok().body(listDto); //mandamos mensagem de ok e o json de users
+	}
+	
+	@RequestMapping(value="/{id}") //informando que ela implementa a requisição GET e que tem um valor no caminho
+	public ResponseEntity<UserDTO> findById(@PathVariable String id){//Retorna um UserDTO (só retorna o que tiver get dentro do DTO)
+																	//@PathVariable: informa que o parametro virá do caminho no postman
+		
+		/*ResponseEntity deve representar a resposta HTTP inteira. Você pode controlar
+		 *  tudo o que for necessário: código de status, cabeçalhos e corpo.
+		 *   @ResponseBody é um marcador para o corpo da resposta HTTP e @ResponseStatus
+		 *    declara o código de status da resposta HTTP.*/
+		
+		//chamo o meu service, que vai chamar o resource para pegar no BD esse user
+		User user = service.findById(id);
+
+		//retornando um UserDTO que é instanciado a partir do user que buscamos por id no bd
+		return ResponseEntity.ok().body(new UserDTO(user)); //mandamos mensagem de ok e o json de users
 	}
 
 }
