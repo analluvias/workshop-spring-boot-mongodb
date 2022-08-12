@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -90,6 +91,20 @@ public class UserResource {
 		
 		//esse retorna vai enviar a mensagem 204: que informa que não há mensagem de retorno
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping(value = "/{id}") //informando que é uma requisição do tipo PUT (update) e que aceita um id dentro da url: localhost:8080/users/1
+	public ResponseEntity<User> update(@PathVariable String id, @RequestBody UserDTO objDTO){ //@PathVariable informa que essa variável chega pela url
+																					 //@RequestBody informa que vai receber um json com os pedidos de update
+		
+		//de DTO para User
+		User obj = service.fromDTO(objDTO);
+		obj.setId(id);
+		obj = service.update(obj);
+		
+		
+		return ResponseEntity.noContent().build(); 
+		
 	}
 
 }
