@@ -21,7 +21,7 @@ public class User implements Serializable{
 	private String name;
 	private String email;
 	
-	@DBRef(lazy=true)
+	@DBRef(lazy=true) // esse parametro eh usado para não retornar automaticamente os posts, apenas seu eu acessá-los especificamente
 	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
 

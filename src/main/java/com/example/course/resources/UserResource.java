@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.course.domain.Post;
 import com.example.course.domain.User;
 import com.example.course.dto.UserDTO;
 import com.example.course.services.UserService;
@@ -106,5 +107,23 @@ public class UserResource {
 		return ResponseEntity.noContent().build(); 
 		
 	}
+	
+	
+	@RequestMapping(value="/{id}/posts") //informando que ela implementa a requisição GET e que tem um valor no caminho
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id){//Retorna um UserDTO (só retorna o que tiver get dentro do DTO)
+																	//@PathVariable: informa que o parametro virá do caminho no postman
+		
+		/*ResponseEntity deve representar a resposta HTTP inteira. Você pode controlar
+		 *  tudo o que for necessário: código de status, cabeçalhos e corpo.
+		 *   @ResponseBody é um marcador para o corpo da resposta HTTP e @ResponseStatus
+		 *    declara o código de status da resposta HTTP.*/
+		
+		//chamo o meu service, que vai chamar o resource para pegar no BD o user com esse id
+		User obj = service.findById(id);
+
+		//retornando uma lista de posts que é obtida a partir do user que buscamos por id no bd
+		return ResponseEntity.ok().body(obj.getPosts()); //mandamos mensagem de ok e o json com lista de posts
+	}
+	
 
 }
