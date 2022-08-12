@@ -42,6 +42,12 @@ public class Instatiation implements CommandLineRunner{
 		Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia", "Acordei faliz hoje!", new AuthorDTO(maria));
 		
 		postRepository.saveAll(Arrays.asList(post1, post2));
+		
+		//adicionando na lista de posts de maria os dois posts
+		maria.getPosts().addAll(Arrays.asList(post1, post2));
+		
+		//salvando maria com os posts no bd
+		userRepository.save(maria);
 	}
 
 }
