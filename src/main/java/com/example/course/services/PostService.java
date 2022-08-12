@@ -1,5 +1,6 @@
 package com.example.course.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ public class PostService {
 		Optional<Post> post = repo.findById(id);
 		
 		return post.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
+	}
+	
+	
+	//essa eh a função que vai chamar o query method que implementamos na interface repository
+	public List<Post> findByTitle(String text){
+		return repo.findByTitleContainingIgnoringCase(text);
 	}
 	
 	
